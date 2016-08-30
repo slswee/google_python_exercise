@@ -50,8 +50,22 @@ def extract_names(filename):
       year = m_year.group(1)
   else: print 'year not found'
 
-  # get rank
-  m_rank_name = re.search(r'.+align..right.+td.(\d).+td.+td.(\w+).+td..td.(\w+).+', text)
+  names_dict = {}
+  # get rank and name
+  m_rank_name = re.findall(r'.+align..right.+td.(\d+).+td.+td.(\w+).+td..td.(\w+).+', text)
+  if m_rank_name: ## rank boyname girlname, a list of tuples
+      # get the names data into a dict and print it
+      for tuple_item in m_rank_name:
+          names_dict[tuple_item[1]] = tuple_item[0]
+          names_dict[tuple_item[2]] = tuple_item[0]
+
+  # Build the [year, 'name rank', ... ] list and print it
+
+      #print out the list
+#      for item in sorted(names_dict.keys()):
+#          print item, ' ', names_dict[item]
+
+  '''
   if m_rank_name:
       print m_rank_name.group(1)
       print m_rank_name.group(2)
@@ -59,10 +73,20 @@ def extract_names(filename):
       rank = m_rank_name.group(1)
   else:
       print 'match objectg not found'
+  '''
 
   f.close()
-  return
+  return names_dict
 
+def print_dict(dict):
+    for item in sorted(dict.keys()):
+        print item, ' ', dict[item]
+
+def write_dict_to_file(dict, filename):
+    f = open(filename, 'w')
+    for item in sorted(dict.keys()):
+        f.write(item + ' ' + dict[item] + '\n')
+    f.close()
 
 def main():
   # This command-line parsing code is provided.
@@ -83,7 +107,12 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
-  extract_names(args[0])
+  for f in args:
+      if summary == False:
+          print_dict(extract_names(f))
+      else:
+          write_dict_to_file(extract_names(f), f+'.summary')
+
 
 if __name__ == '__main__':
   main()
