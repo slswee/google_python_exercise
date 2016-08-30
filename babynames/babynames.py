@@ -46,11 +46,13 @@ def extract_names(filename):
   text = f.read()
   m_year = re.search(r'.+Popularity\sin\s(\d\d\d\d).+', text)
   if m_year:
-      print m_year.group(1)
+     # print m_year.group(1)
       year = m_year.group(1)
   else: print 'year not found'
 
   names_dict = {}
+  names_dict[year] = ''
+  names_list = []
   # get rank and name
   m_rank_name = re.findall(r'.+align..right.+td.(\d+).+td.+td.(\w+).+td..td.(\w+).+', text)
   if m_rank_name: ## rank boyname girlname, a list of tuples
@@ -58,14 +60,18 @@ def extract_names(filename):
       for tuple_item in m_rank_name:
           names_dict[tuple_item[1]] = tuple_item[0]
           names_dict[tuple_item[2]] = tuple_item[0]
+  f.close()
+  return names_dict
 
+'''
   # Build the [year, 'name rank', ... ] list and print it
-
-      #print out the list
-#      for item in sorted(names_dict.keys()):
-#          print item, ' ', names_dict[item]
-
-  '''
+  names_list.append(year)
+  for item in sorted(names_dict.keys()):
+      names_list.append(item)
+      names_list.append(names_dict[item])
+'''
+ # print names_list
+'''
   if m_rank_name:
       print m_rank_name.group(1)
       print m_rank_name.group(2)
@@ -73,10 +79,7 @@ def extract_names(filename):
       rank = m_rank_name.group(1)
   else:
       print 'match objectg not found'
-  '''
-
-  f.close()
-  return names_dict
+'''
 
 def print_dict(dict):
     for item in sorted(dict.keys()):
@@ -87,6 +90,20 @@ def write_dict_to_file(dict, filename):
     for item in sorted(dict.keys()):
         f.write(item + ' ' + dict[item] + '\n')
     f.close()
+
+### I don't like putting year + names_rank in a list, because it's difficult to
+# print.  Adding the year as the first entry of the name_rank dictionary solves
+# this problem perfectly
+
+'''
+def write_list_to_file(namelist, filename):
+    f = open(filename, 'w')
+    f.write(namelist[0])
+    f.write('\n')
+    for i in range(1, len(namelist)-1):
+        f.write(namelist[i] + ' ')
+    f.close()
+'''
 
 def main():
   # This command-line parsing code is provided.
