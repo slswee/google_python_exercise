@@ -17,6 +17,36 @@ import commands
 
 # +++your code here+++
 # Write functions and modify main() to call them
+def ListSpecial(dir): # find all the special files, and list them
+    filenames = os.listdir(dir)
+    results = []
+    print filenames
+    for filename in filenames:
+        match = re.search(r'\w+__\w+__[.]\w+', filename)
+        if match:
+            path = os.path.join(dir, filename)
+            path = os.path.abspath(path)
+            #print path
+            results.append(path)
+        # the else statement is for debugging
+        #else:
+        #    print 'not found'
+    return results
+##find the special files, create the todir directory if it doesn't exist
+def CopyToDir(todir, dir):
+    filenames = os.listdir(dir)
+    if not os.path.exists(todir):
+        os.mkdir(todir)
+    for filename in filenames:
+        match = re.search(r'\w+__\w+__[.]\w+', filename)
+        if match:
+            shutil.copy(filename, todir)
+    return
+
+def ZipToDir(zipname, dir):
+    zip -j zipname ListSpecial(dir)
+    return 
+#    zip -j blah.zip file_paths
 
 
 
@@ -50,6 +80,11 @@ def main():
 
   # +++your code here+++
   # Call your functions
-  
+
+  specialfiles = ListSpecial(args[0])
+  for f in specialfiles:
+      print f
+  #CopyToDir(todir, args[0])
+
 if __name__ == "__main__":
   main()
