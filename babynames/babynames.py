@@ -54,7 +54,7 @@ def extract_names(filename):
   names_dict = {}
   names_dict[year] = ''
   names_list = []
-  
+
   # get rank and name
   m_rank_name = re.findall(r'.+align..right.+td.(\d+).+td.+td.(\w+).+td..td.(\w+).+', text)
   if m_rank_name: ## rank boyname girlname, a list of tuples
